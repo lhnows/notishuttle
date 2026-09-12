@@ -1,0 +1,47 @@
+<resources>
+    <string name="app_name">NotiShuttle</string>
+    <string name="service_label">NotiShuttle notification relay</string>
+
+    <string name="channel_status_name">Running status</string>
+    <string name="channel_status_desc">Shown to confirm NotiShuttle is forwarding notifications</string>
+    <string name="running_title">NotiShuttle is running</string>
+    <string name="running_text">Forwarding notifications to your webhook</string>
+
+    <string name="section_access">Notification access</string>
+    <string name="access_status_granted">Granted — notifications are being captured</string>
+    <string name="access_status_denied">Not granted — tap below to enable</string>
+    <string name="btn_grant_access">Grant notification access</string>
+
+    <string name="section_webhook">Webhook</string>
+    <string name="label_enabled">Enable forwarding</string>
+    <string name="label_webhook">Webhook URL</string>
+    <string name="hint_webhook">https://example.com/hook</string>
+
+    <string name="section_filter">Filter</string>
+    <string name="rb_all">Forward all apps</string>
+    <string name="rb_allowlist">Only selected apps</string>
+    <string name="rb_blocklist">All except selected</string>
+    <string name="btn_manage_apps">Manage app list</string>
+    <string name="label_ignore_ongoing">Ignore ongoing (persistent) notifications</string>
+    <string name="label_ignore_silent">Ignore silent notifications</string>
+
+    <string name="section_advanced">Advanced</string>
+    <string name="label_keyword">Keyword filter (optional)</string>
+    <string name="hint_keyword">Only forward notifications containing this text</string>
+    <string name="label_secret">Signature secret (optional)</string>
+    <string name="hint_secret">HMAC-SHA256 secret for the X-NotiShuttle-Signature header</string>
+    <string name="label_headers">Custom headers (JSON, optional)</string>
+    <string name="hint_headers">{"Authorization":"Bearer your-token"}</string>
+
+    <string name="section_actions">Actions</string>
+    <string name="btn_test">Send test webhook</string>
+    <string name="test_sending">Sending…</string>
+    <string name="test_result_ok">Test sent successfully (HTTP 2xx)</string>
+    <string name="test_result_fail">Test failed — check the URL, network, and headers</string>
+    <string name="btn_battery">Disable battery optimization</string>
+    <string name="battery_exempt">Battery optimization already disabled</string>
+
+    <string name="app_filter_title">App filter</string>
+    <string name="app_filter_subtitle">Selection applies to the allow-list / block-list mode chosen on the main screen.</string>
+    <string name="app_filter_empty">No apps found</string>
+</resources>

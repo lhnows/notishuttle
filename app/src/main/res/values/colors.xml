@@ -1,0 +1,8 @@
+<resources>
+    <color name="primary">#1E88E5</color>
+    <color name="primary_dark">#1565C0</color>
+    <color name="accent">#26C6DA</color>
+    <color name="ic_launcher_background">#1E88E5</color>
+    <color name="ok_green">#2E7D32</color>
+    <color name="err_red">#C62828</color>
+</resources>
