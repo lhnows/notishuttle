@@ -29,6 +29,8 @@ endpoint you control, as a JSON `POST`.
 - 🔐 **HMAC-SHA256 signing** — optionally sign each request so your endpoint can verify
   authenticity with a shared secret.
 - 🧩 **Custom headers** — attach any extra HTTP headers (e.g. `Authorization: Bearer …`).
+- 🍏 **Bark target** — push straight to [Bark](https://github.com/Finb/Bark) on your iPhone
+  (`title`/`subtitle`/`body`), in addition to the generic JSON webhook.
 - 🧪 **Test button** — send a sample payload to verify your webhook is reachable.
 - 🔋 **Battery-friendly** — uses the system notification pipeline and WorkManager; no polling.
 
@@ -68,7 +70,8 @@ Or open the project in Android Studio and press **Run**.
 
 1. Build and install the app.
 2. Open NotiShuttle and tap **Grant notification access**.
-3. Enter your webhook URL and turn on **Enable forwarding**.
+3. Choose a target — **Generic webhook** or **Bark** — enter its URL (for Bark:
+   `https://api.day.app/<your-key>`), and turn on **Enable forwarding**.
 4. (Optional) tap **Send test webhook** to verify.
 5. Done — notifications start streaming immediately. Nothing to restart after a reboot.
 

@@ -6,6 +6,8 @@ import java.util.UUID
 
 enum class FilterMode { ALL, ALLOWLIST, BLOCKLIST }
 
+enum class TargetType { WEBHOOK, BARK }
+
 /** Thin wrapper over SharedPreferences holding all user configuration. */
 class AppSettings private constructor(context: Context) {
 
@@ -48,6 +50,12 @@ class AppSettings private constructor(context: Context) {
             .getOrDefault(FilterMode.ALL)
         set(value) = prefs.edit().putString(KEY_FILTER_MODE, value.name).apply()
 
+    /** Delivery target: a generic JSON webhook, or Bark (api.day.app / self-hosted). */
+    var targetType: TargetType
+        get() = runCatching { TargetType.valueOf(prefs.getString(KEY_TARGET_TYPE, TargetType.WEBHOOK.name)!!) }
+            .getOrDefault(TargetType.WEBHOOK)
+        set(value) = prefs.edit().putString(KEY_TARGET_TYPE, value.name).apply()
+
     /** Package names selected for allow-list / block-list mode. */
     var filteredApps: Set<String>
         get() = prefs.getStringSet(KEY_FILTERED_APPS, emptySet()) ?: emptySet()
@@ -73,6 +81,7 @@ class AppSettings private constructor(context: Context) {
         private const val KEY_IGNORE_ONGOING = "ignore_ongoing"
         private const val KEY_IGNORE_SILENT = "ignore_silent"
         private const val KEY_FILTER_MODE = "filter_mode"
+        private const val KEY_TARGET_TYPE = "target_type"
         private const val KEY_FILTERED_APPS = "filtered_apps"
         private const val KEY_DEVICE_ID = "device_id"
 

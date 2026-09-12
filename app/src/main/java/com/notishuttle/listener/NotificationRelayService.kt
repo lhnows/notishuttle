@@ -17,7 +17,9 @@ import androidx.work.workDataOf
 import com.notishuttle.BuildConfig
 import com.notishuttle.config.AppSettings
 import com.notishuttle.config.FilterMode
+import com.notishuttle.config.TargetType
 import com.notishuttle.model.AppInfo
+import com.notishuttle.model.BarkPayload
 import com.notishuttle.model.NotificationInfo
 import com.notishuttle.model.NotificationPayload
 import com.notishuttle.model.TimeInfo
@@ -46,12 +48,14 @@ class NotificationRelayService : NotificationListenerService() {
         val payload = buildPayload(context, sbn, settings) ?: return
         if (!matchesKeyword(settings, payload.notification)) return
 
-        val json = payload.toJson()
+        val isBark = settings.targetType == TargetType.BARK
+        val url = if (isBark) BarkPayload.normalizeEndpoint(settings.webhookUrl) else settings.webhookUrl
+        val json = if (isBark) BarkPayload.toJson(payload) else payload.toJson()
         val data = workDataOf(
-            WebhookWorker.KEY_URL to settings.webhookUrl,
+            WebhookWorker.KEY_URL to url,
             WebhookWorker.KEY_PAYLOAD to json,
-            WebhookWorker.KEY_SECRET to settings.secret,
-            WebhookWorker.KEY_HEADERS to settings.headersJson,
+            WebhookWorker.KEY_SECRET to if (isBark) "" else settings.secret,
+            WebhookWorker.KEY_HEADERS to if (isBark) "" else settings.headersJson,
         )
 
         val request = OneTimeWorkRequestBuilder<WebhookWorker>()

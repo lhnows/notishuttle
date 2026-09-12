@@ -16,9 +16,11 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.lifecycleScope
 import com.notishuttle.config.AppSettings
 import com.notishuttle.config.FilterMode
+import com.notishuttle.config.TargetType
 import com.notishuttle.databinding.ActivityMainBinding
 import com.notishuttle.listener.NotificationRelayService
 import com.notishuttle.model.AppInfo
+import com.notishuttle.model.BarkPayload
 import com.notishuttle.model.NotificationInfo
 import com.notishuttle.model.NotificationPayload
 import com.notishuttle.model.TimeInfo
@@ -66,6 +68,10 @@ class MainActivity : AppCompatActivity() {
             FilterMode.ALLOWLIST -> binding.rbAllowlist.isChecked = true
             FilterMode.BLOCKLIST -> binding.rbBlocklist.isChecked = true
         }
+        when (settings.targetType) {
+            TargetType.WEBHOOK -> binding.rbWebhook.isChecked = true
+            TargetType.BARK -> binding.rbBark.isChecked = true
+        }
     }
 
     private fun setupListeners() {
@@ -96,6 +102,10 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        binding.rgTarget.setOnCheckedChangeListener { _, checkedId ->
+            settings.targetType = if (checkedId == R.id.rbBark) TargetType.BARK else TargetType.WEBHOOK
+        }
+
         binding.btnAccess.setOnClickListener { openNotificationAccessSettings() }
         binding.btnManageApps.setOnClickListener {
             startActivity(Intent(this, AppFilterActivity::class.java))
@@ -119,19 +129,24 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun sendTest() {
-        val url = binding.editUrl.text?.toString()?.trim().orEmpty()
-        if (url.isBlank()) {
+        val rawUrl = binding.editUrl.text?.toString()?.trim().orEmpty()
+        if (rawUrl.isBlank()) {
             binding.tilUrl.error = getString(R.string.hint_webhook)
             return
         }
         binding.tilUrl.error = null
-        settings.webhookUrl = url
+        settings.webhookUrl = rawUrl
 
-        val payload = buildTestPayload()
+        val isBark = settings.targetType == TargetType.BARK
+        val url = if (isBark) BarkPayload.normalizeEndpoint(rawUrl) else rawUrl
+        val body = if (isBark) BarkPayload.testJson() else buildTestPayload().toJson()
+        val secret = if (isBark) "" else settings.secret
+        val headers = if (isBark) "" else settings.headersJson
+
         binding.tvTestResult.text = getString(R.string.test_sending)
         lifecycleScope.launch {
             val ok = withContext(Dispatchers.IO) {
-                WebhookSender.send(url, payload.toJson(), settings.secret, settings.headersJson)
+                WebhookSender.send(url, body, secret, headers)
             }
             binding.tvTestResult.text = getString(
                 if (ok) R.string.test_result_ok else R.string.test_result_fail

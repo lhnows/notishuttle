@@ -14,6 +14,8 @@
 
     <string name="section_webhook">Webhook</string>
     <string name="label_enabled">Enable forwarding</string>
+    <string name="rb_webhook">Generic webhook (JSON)</string>
+    <string name="rb_bark">Bark (api.day.app)</string>
     <string name="label_webhook">Webhook URL</string>
     <string name="hint_webhook">https://example.com/hook</string>
 
